@@ -490,7 +490,7 @@
       </div>
 
       <div class="spotify-player">
-        <audio id="audio"></audio>
+        <audio id="audio" autoplay></audio>
         <span id="songTitle">Sweet Melodies...</span>
         <div class="controls-row">
           <button type="button" class="s-btn" id="shuffleBtn" style="opacity:0.4;"><iconify-icon icon="ph:shuffle-bold"></iconify-icon></button>
@@ -584,9 +584,9 @@
 
     // Music Logic
     const playlist = [
-      { title: "AURORA - Runaway", src: "AURORA - Runaway.mp3" },
+      { title: "TÁO - Bạch Nguyệt Quang", src: "TÁO - Bạch Nguyệt Quang.mp3" },
       { title: "David Kushner - Daylight", src: "David Kushner - Daylight.mp3" },
-      { title: "TÁO - Bạch Nguyệt Quang", src: "TÁO - Bạch Nguyệt Quang.mp3" }
+      { title: "AURORA - Runaway", src: "AURORA - Runaway.mp3" }
     ];
     let songIndex = 0;
     const audio = document.getElementById("audio");
@@ -598,6 +598,25 @@
     let loopEnabled = false;
     function loadSong(s) { document.getElementById("songTitle").innerText = s.title; audio.src = s.src; }
     loadSong(playlist[songIndex]);
+
+    function startMusic() {
+      audio.play()
+        .then(() => playIcon.setAttribute("icon", "ph:pause-fill"))
+        .catch(() => {});
+    }
+
+    startMusic();
+    document.addEventListener("pointerdown", startMusic, { once: true });
+
+    function stopMusicWhenLeaving() {
+      audio.pause();
+      playIcon.setAttribute("icon", "ph:play-fill");
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopMusicWhenLeaving();
+    });
+    window.addEventListener("pagehide", stopMusicWhenLeaving);
 
     function updateToggle(button, enabled) {
       button.style.opacity = enabled ? "1" : "0.4";
