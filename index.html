@@ -755,6 +755,42 @@
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeGalleryModal();
     });
+
+    const tabTitles = ["Bio - Thuy Tien", "Welcome to my bio", "@edetiu ♡"];
+    let tabTitleIndex = 0;
+    let tabTitleStep = 0;
+    let isDeletingTabTitle = false;
+    document.title = "";
+
+    function typeTabTitle() {
+      const currentTitle = tabTitles[tabTitleIndex];
+      document.title = isDeletingTabTitle
+        ? currentTitle.slice(0, tabTitleStep)
+        : currentTitle.slice(0, tabTitleStep);
+
+      if (isDeletingTabTitle) {
+        tabTitleStep -= 1;
+        if (tabTitleStep < 0) {
+          isDeletingTabTitle = false;
+          tabTitleIndex = (tabTitleIndex + 1) % tabTitles.length;
+          tabTitleStep = 0;
+          setTimeout(typeTabTitle, 500);
+          return;
+        }
+      } else {
+        tabTitleStep += 1;
+        if (tabTitleStep > currentTitle.length) {
+          isDeletingTabTitle = true;
+          tabTitleStep = currentTitle.length;
+          setTimeout(typeTabTitle, 1800);
+          return;
+        }
+      }
+
+      setTimeout(typeTabTitle, isDeletingTabTitle ? 80 : 140);
+    }
+
+    typeTabTitle();
   </script>
 
   <script src="https://cdn.jsdelivr.net/gh/adryd325/oneko.js@main/oneko.js"
