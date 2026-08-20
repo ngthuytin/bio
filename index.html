@@ -23,8 +23,7 @@
     
     body {
       font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #ffffff 0%, #ffdde1 50%, #ffc8dd 100%);
-      background-attachment: fixed;
+      background: transparent;
       min-height: 100vh;
       display: flex;
       align-items: center; 
@@ -32,6 +31,18 @@
       color: var(--primary-pink); 
       overflow-x: hidden;
       padding: 40px 10px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .background-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      pointer-events: none;
     }
 
     .tiltWrap {
@@ -44,8 +55,9 @@
 
     .panel {
       width: 100%;
-      background: var(--glass-white); 
-      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.58);
+      backdrop-filter: blur(12px) saturate(120%);
+      -webkit-backdrop-filter: blur(12px) saturate(120%);
       border-radius: 50px;
       border: 3px solid #fff; 
       box-shadow: 0 15px 50px rgba(255, 143, 171, 0.2);
@@ -95,6 +107,8 @@
       font-family: 'Cherry Bomb One', cursive;
       font-size: clamp(35px, 8vw, 60px);
       margin-bottom: 10px;
+      width: 100%;
+      text-align: center;
       color: var(--primary-pink); 
       text-shadow: 2px 2px 0px #fff; 
     }
@@ -118,15 +132,20 @@
 
     /* BIO AUTO EXPAND */
     .bio-card {
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.28);
+      backdrop-filter: blur(16px) saturate(125%);
+      -webkit-backdrop-filter: blur(16px) saturate(125%);
       border-radius: 20px;
-      padding: 20px;
-      margin: 0 25px 25px;
-      text-align: left;
-      border: 1px solid var(--light-pink);
-      line-height: 1.6;
+      padding: 10px 16px;
+      width: fit-content;
+      max-width: calc(100% - 30px);
+      margin: 0 auto 25px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 8px 24px rgba(255, 77, 109, 0.1);
+      line-height: 1.4;
       color: #5e4b50;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       word-wrap: break-word;
     }
@@ -166,16 +185,287 @@
     }
     .appBtn:hover { transform: translateY(-5px); background: var(--primary-pink); color: #fff; }
 
+    .extra-content {
+      margin: 0 25px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .gallery-shell {
+      position: relative;
+      width: min(100%, 380px);
+      margin: 14px auto 0;
+    }
+
+    .mini-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .mini-gallery img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      cursor: zoom-in;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      border-radius: 16px;
+      box-shadow: 0 5px 14px rgba(255, 77, 109, 0.12);
+    }
+
+    .gallery-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(82, 24, 44, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .gallery-modal.active {
+      display: flex;
+    }
+
+    .gallery-modal img {
+      display: block;
+      max-width: min(92vw, 720px);
+      max-height: 86vh;
+      object-fit: contain;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    .gallery-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .gallery-modal-close:hover {
+      background: var(--primary-pink);
+    }
+
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--primary-pink);
+      font-size: 22px;
+      line-height: 20px;
+      cursor: pointer;
+      transform: translateY(-50%);
+    }
+
+    .gallery-nav:hover {
+      background: var(--primary-pink);
+      color: #fff;
+    }
+
+    .gallery-prev { left: -14px; }
+    .gallery-next { right: -14px; }
+
+    .date-card {
+      padding: 12px 16px;
+      margin-top: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.34);
+      color: #8a5a65;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .birthday-label {
+      margin-bottom: 6px;
+      color: var(--primary-pink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
     /* POPUP RIOT */
     .valoModal { display: none; position: fixed; inset: 0; background: rgba(255, 182, 193, 0.5); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; }
     .valoModal.active { display: flex; }
     .valoCard { background: #fff; padding: 30px; border-radius: 30px; width: 90%; max-width: 350px; text-align: center; border: 3px solid var(--light-pink); position: relative; }
 
-    #oneko { pointer-events: none; }
+    #oneko {
+      position: fixed !important;
+      z-index: 99999 !important;
+      display: block !important;
+      pointer-events: none;
+    }
+
+    .cat-fallback {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      width: 32px;
+      height: 32px;
+      background-image: url("https://cdn.jsdelivr.net/gh/adryd325/oneko.js@main/oneko.gif");
+      background-position: -96px -96px;
+      background-repeat: no-repeat;
+      image-rendering: pixelated;
+      z-index: 99999;
+      pointer-events: none;
+      transform: scale(1.5);
+      transform-origin: bottom left;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        align-items: flex-start;
+        padding: 18px 8px 28px;
+      }
+
+      .panel {
+        border-radius: 30px;
+        padding-bottom: 24px;
+      }
+
+      .profileTheme {
+        height: 185px;
+      }
+
+      .profileBanner {
+        background-size: cover;
+      }
+
+      .dAvatarWrap {
+        width: 125px;
+        height: 125px;
+        margin-top: -68px;
+      }
+
+      .dAvatar {
+        border-width: 4px;
+      }
+
+      .dDisplayName {
+        font-size: clamp(34px, 14vw, 48px);
+        margin-bottom: 8px;
+      }
+
+      .status-card,
+      .bio-card,
+      .spotify-player {
+        margin-left: 12px;
+        margin-right: 12px;
+      }
+
+      .status-card {
+        padding: 12px 14px;
+        gap: 8px;
+      }
+
+      .user-left {
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .status-username {
+        font-size: 15px;
+      }
+
+      #discordStatus {
+        max-width: 45%;
+        font-size: 11px;
+      }
+
+      .bio-card {
+        padding: 10px 14px;
+        margin-bottom: 18px;
+      }
+
+      .spotify-player {
+        padding: 20px 14px;
+        margin-bottom: 24px;
+        border-radius: 28px;
+      }
+
+      #songTitle {
+        padding: 0 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .controls-row {
+        gap: 13px;
+      }
+
+      .s-btn {
+        font-size: 22px;
+      }
+
+      .play-circle {
+        width: 48px;
+        height: 48px;
+      }
+
+      .time-row {
+        gap: 7px;
+        font-size: 11px;
+      }
+
+      .links2 {
+        gap: 8px;
+        padding: 0 12px;
+      }
+
+      .appBtn {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        font-size: 22px;
+      }
+
+      .appBtn img {
+        width: 43px;
+        height: 43px;
+      }
+
+      .extra-content {
+        margin: 0 12px;
+        gap: 12px;
+      }
+
+      .mini-gallery {
+        gap: 7px;
+      }
+
+      .gallery-shell {
+        width: calc(100% - 24px);
+      }
+
+      .gallery-prev { left: -10px; }
+      .gallery-next { right: -10px; }
+    }
   </style>
 </head>
 
 <body>
+  <video class="background-video" autoplay muted loop playsinline aria-hidden="true">
+    <source src="back.mp4" type="video/mp4">
+  </video>
+
   <div class="tiltWrap">
     <div class="panel">
       <div class="profileTheme"><div class="profileBanner"></div></div>
@@ -196,8 +486,7 @@
       </div>
 
       <div class="bio-card">
-        Thuy Tien <br>
-        hi
+        edet gây <br>
       </div>
 
       <div class="spotify-player">
@@ -227,7 +516,29 @@
           <img src="locket.png" alt="L">
         </a>
       </div>
+
+      <div class="extra-content">
+        <div class="gallery-shell">
+          <button class="gallery-nav gallery-prev" id="galleryPrev" type="button" aria-label="Previous images">‹</button>
+          <div class="mini-gallery" id="miniGallery" aria-label="Gallery">
+            <img src="https://cdn.discordapp.com/attachments/1532221252746346609/1539900532775190569/IMG_4597.jpg?ex=6a87ffa0&is=6a86ae20&hm=d1ba1cc4d25c9a56d0a7019ee08314fbc577aad139ef68f15ed12ff501382028&" alt="Gallery image 1">
+            <img src="https://cdn.discordapp.com/attachments/1532221252746346609/1539900533140234281/Live_20260627230542577.jpg?ex=6a87ffa1&is=6a86ae21&hm=59dc12e6c7ac2eeeaa356a0519e586cae958fa28b46630f9232d18fbf06ff35b&" alt="Gallery image 2">
+            <img src="https://cdn.discordapp.com/attachments/1532221252746346609/1539900533563727922/IMG_3452.jpg?ex=6a87ffa1&is=6a86ae21&hm=dfed48a2838fbb56532adea6faa4aaf70fdee4ac1ccd23f20e98c32e7c718fa9&" alt="Gallery image 3">
+          </div>
+          <button class="gallery-nav gallery-next" id="galleryNext" type="button" aria-label="Next images">›</button>
+        </div>
+
+        <div class="date-card">
+          <div class="birthday-label"> Sinh nhật: 22/04</div>
+          <div id="dateCard">Đang tính thời gian...</div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="gallery-modal" id="galleryModal" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="gallery-modal-close" id="galleryModalClose" type="button" aria-label="Close image preview">×</button>
+    <img id="galleryModalImage" alt="Expanded gallery image">
   </div>
 
   <div class="valoModal" id="valoModal">
@@ -265,27 +576,62 @@
     // Riot Popup
     const vBtn = document.getElementById("valoBtn");
     const vModal = document.getElementById("valoModal");
-    vBtn.onclick = () => vModal.classList.add("active");
-    document.getElementById("valoClose").onclick = () => vModal.classList.remove("active");
+    const vClose = document.getElementById("valoClose");
+    if (vBtn && vModal && vClose) {
+      vBtn.onclick = () => vModal.classList.add("active");
+      vClose.onclick = () => vModal.classList.remove("active");
+    }
 
     // Music Logic
     const playlist = [
-      { title: "Dự báo thời tiết hôm nay mưa", src: "nhac.mp3" },
-      { title: "Chấm xám - SIVAN", src: "nhac2.mp3" },
-      { title: "Hngle - Buông", src: "nhac3.mp3" }
+      { title: "AURORA - Runaway", src: "AURORA - Runaway.mp3" },
+      { title: "David Kushner - Daylight", src: "David Kushner - Daylight.mp3" },
+      { title: "TÁO - Bạch Nguyệt Quang", src: "TÁO - Bạch Nguyệt Quang.mp3" }
     ];
     let songIndex = 0;
     const audio = document.getElementById("audio");
     const playBtn = document.getElementById("playBtn");
     const playIcon = document.getElementById("playIcon");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const loopBtn = document.getElementById("loopBtn");
+    let shuffleEnabled = false;
+    let loopEnabled = false;
     function loadSong(s) { document.getElementById("songTitle").innerText = s.title; audio.src = s.src; }
     loadSong(playlist[songIndex]);
+
+    function updateToggle(button, enabled) {
+      button.style.opacity = enabled ? "1" : "0.4";
+      button.setAttribute("aria-pressed", String(enabled));
+    }
+
+    shuffleBtn.onclick = () => {
+      shuffleEnabled = !shuffleEnabled;
+      updateToggle(shuffleBtn, shuffleEnabled);
+    };
+    loopBtn.onclick = () => {
+      loopEnabled = !loopEnabled;
+      audio.loop = loopEnabled;
+      updateToggle(loopBtn, loopEnabled);
+    };
 
     playBtn.onclick = () => {
       if (audio.paused) { audio.play(); playIcon.setAttribute("icon", "ph:pause-fill"); }
       else { audio.pause(); playIcon.setAttribute("icon", "ph:play-fill"); }
     };
-    document.getElementById("nextBtn").onclick = () => { songIndex = (songIndex + 1) % playlist.length; loadSong(playlist[songIndex]); audio.play(); playIcon.setAttribute("icon", "ph:pause-fill"); };
+    document.getElementById("nextBtn").onclick = () => {
+      if (shuffleEnabled) {
+        let nextIndex = songIndex;
+        while (playlist.length > 1 && nextIndex === songIndex) {
+          nextIndex = Math.floor(Math.random() * playlist.length);
+        }
+        songIndex = nextIndex;
+      } else {
+        songIndex = (songIndex + 1) % playlist.length;
+      }
+      loadSong(playlist[songIndex]);
+      audio.play();
+      playIcon.setAttribute("icon", "ph:pause-fill");
+    };
     document.getElementById("prevBtn").onclick = () => { songIndex = (songIndex - 1 + playlist.length) % playlist.length; loadSong(playlist[songIndex]); audio.play(); playIcon.setAttribute("icon", "ph:pause-fill"); };
 
     audio.ontimeupdate = () => {
@@ -313,8 +659,152 @@
       } catch(e){}
     }
     loadStatus(); setInterval(loadStatus, 15000);
+
+    const dateCard = document.getElementById("dateCard");
+    function updateBirthdayCountdown() {
+      const now = new Date();
+      const isBirthday = now.getMonth() === 3 && now.getDate() === 22;
+      if (isBirthday) {
+        dateCard.innerText = "🎉 Hôm nay là sinh nhật! 🎂";
+        return;
+      }
+
+      let birthday = new Date(now.getFullYear(), 3, 22);
+      if (birthday < now) birthday = new Date(now.getFullYear() + 1, 3, 22);
+
+      const remaining = birthday - now;
+      const days = Math.floor(remaining / 86400000);
+      const hours = Math.floor((remaining % 86400000) / 3600000);
+      const minutes = Math.floor((remaining % 3600000) / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+
+      dateCard.innerText = `🎂 Còn ${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây đến sinh nhật 🎂`;
+    }
+    updateBirthdayCountdown();
+    setInterval(updateBirthdayCountdown, 1000);
+
+    const galleryImages = [
+      { src: "https://cdn.discordapp.com/attachments/1532221252746346609/1539900532775190569/IMG_4597.jpg?ex=6a87ffa0&is=6a86ae20&hm=d1ba1cc4d25c9a56d0a7019ee08314fbc577aad139ef68f15ed12ff501382028&", alt: "Gallery image 1" },
+      { src: "https://cdn.discordapp.com/attachments/1532221252746346609/1539900533140234281/Live_20260627230542577.jpg?ex=6a87ffa1&is=6a86ae21&hm=59dc12e6c7ac2eeeaa356a0519e586cae958fa28b46630f9232d18fbf06ff35b&", alt: "Gallery image 2" },
+      { src: "https://cdn.discordapp.com/attachments/1532221252746346609/1539900533563727922/IMG_3452.jpg?ex=6a87ffa1&is=6a86ae21&hm=dfed48a2838fbb56532adea6faa4aaf70fdee4ac1ccd23f20e98c32e7c718fa9&", alt: "Gallery image 3" }
+    ];
+    const miniGallery = document.getElementById("miniGallery");
+    let galleryIndex = 0;
+
+    function renderGallery() {
+      miniGallery.innerHTML = "";
+      for (let offset = 0; offset < galleryImages.length; offset += 1) {
+        const image = galleryImages[(galleryIndex + offset) % galleryImages.length];
+        const imageElement = document.createElement("img");
+        imageElement.src = image.src;
+        imageElement.alt = image.alt;
+        miniGallery.appendChild(imageElement);
+      }
+    }
+
+    document.getElementById("galleryPrev").onclick = () => {
+      galleryIndex = (galleryIndex - 1 + galleryImages.length) % galleryImages.length;
+      renderGallery();
+    };
+    document.getElementById("galleryNext").onclick = () => {
+      galleryIndex = (galleryIndex + 1) % galleryImages.length;
+      renderGallery();
+    };
+    renderGallery();
+
+    const galleryModal = document.getElementById("galleryModal");
+    const galleryModalImage = document.getElementById("galleryModalImage");
+    const galleryModalClose = document.getElementById("galleryModalClose");
+
+    miniGallery.onclick = (event) => {
+      const image = event.target.closest("img");
+      if (!image) return;
+      galleryModalImage.src = image.src;
+      galleryModalImage.alt = image.alt;
+      galleryModal.classList.add("active");
+    };
+
+    function closeGalleryModal() {
+      galleryModal.classList.remove("active");
+      galleryModalImage.removeAttribute("src");
+    }
+
+    galleryModalClose.onclick = closeGalleryModal;
+    galleryModal.onclick = (event) => {
+      if (event.target === galleryModal) closeGalleryModal();
+    };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeGalleryModal();
+    });
   </script>
 
-  <script src="https://cdn.jsdelivr.net/gh/adryd325/oneko.js@main/oneko.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/gh/adryd325/oneko.js@main/oneko.js"
+          data-cat="https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif"
+          defer></script>
+  <script>
+    setTimeout(() => {
+      if (!document.getElementById("oneko")) {
+        const cat = document.createElement("div");
+        cat.id = "oneko";
+        cat.className = "cat-fallback";
+        cat.setAttribute("aria-hidden", "true");
+        document.body.appendChild(cat);
+
+        const spriteSets = {
+          N: [[-1, -2], [-1, -3]],
+          NE: [[0, -2], [0, -3]],
+          E: [[-3, 0], [-3, -1]],
+          SE: [[-5, -1], [-5, -2]],
+          S: [[-6, -3], [-7, -2]],
+          SW: [[-5, -3], [-6, -1]],
+          W: [[-4, -2], [-4, -3]],
+          NW: [[-1, 0], [-1, -1]]
+        };
+        let catX = 48;
+        let catY = window.innerHeight - 48;
+        let mouseX = catX;
+        let mouseY = catY;
+        let frame = 0;
+
+        document.addEventListener("mousemove", (event) => {
+          mouseX = event.clientX;
+          mouseY = event.clientY;
+        });
+
+        function animateCat() {
+          const deltaX = mouseX - catX;
+          const deltaY = mouseY - catY;
+          const distance = Math.hypot(deltaX, deltaY);
+
+          if (distance > 42) {
+            const directionX = deltaX / distance;
+            const directionY = deltaY / distance;
+            catX += directionX * 3;
+            catY += directionY * 3;
+            catX = Math.max(16, Math.min(window.innerWidth - 16, catX));
+            catY = Math.max(16, Math.min(window.innerHeight - 16, catY));
+
+            let direction = "";
+            if (directionY < -0.5) direction += "N";
+            if (directionY > 0.5) direction += "S";
+            if (directionX < -0.5) direction += "W";
+            if (directionX > 0.5) direction += "E";
+            const frames = spriteSets[direction] || spriteSets.S;
+            const sprite = frames[Math.floor(frame / 6) % frames.length];
+            cat.style.backgroundPosition = `${sprite[0] * 32}px ${sprite[1] * 32}px`;
+            frame += 1;
+          } else {
+            cat.style.backgroundPosition = "-96px -96px";
+          }
+
+          cat.style.left = `${catX - 16}px`;
+          cat.style.top = `${catY - 16}px`;
+          requestAnimationFrame(animateCat);
+        }
+
+        animateCat();
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
